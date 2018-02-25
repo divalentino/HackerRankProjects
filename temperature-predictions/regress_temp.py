@@ -9,7 +9,6 @@ from sklearn.preprocessing import Imputer
 from sklearn import datasets, linear_model
 import numpy as np
 from scipy import interpolate
-from sklearn.ensemble import GradientBoostingRegressor
 
 # Make a hash table for months to treat them numerically.
 keys = ['January','February','March','April','May', 'June','July','August',
@@ -55,8 +54,6 @@ for i in range(npoints) :
     my_tmax = np.NaN if 'Missing' in line[2] else float(line[2])
     my_tmin = np.NaN if 'Missing' in line[3] else float(line[3])
 
-    day += 1;
-    
     # Only want to keep measurements with tmin and tmax for
     # fitting. Then we can fill in the gaps later.
     if 'Missing' in line[2] or 'Missing' in line[3] :
@@ -67,21 +64,26 @@ for i in range(npoints) :
         tmax.append(my_tmax);
         tmin.append(my_tmin);
         days.append([year,month]);
-        features_tmax.append([year,day,my_tmin]);
-        features_tmin.append([year,day,my_tmax]);
+        features_tmax.append([year,month,my_tmin]);
+        features_tmin.append([year,month,my_tmax]);
 
 ################################################################################
 # Try a multivariate regression which takes into account year, date, and
 # min (max) temperature as features to figure out the target max (min) temp.
 ################################################################################
 
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.tree import DecisionTreeRegressor
+from sklearn.ensemble import GradientBoostingRegressor
+
+reg_tmin = GradientBoostingRegressor(loss='ls', learning_rate=0.05, n_estimators=120, max_depth=3)
+reg_tmax = GradientBoostingRegressor(loss='ls', learning_rate=0.075, n_estimators=100, max_depth=4)
+
 # Create the linear models.
-#reg_tmax = linear_model.Lasso(alpha = 0.2);
-#reg_tmax = GradientBoostingRegressor(n_estimators=5000, learning_rate=0.0018)
+#reg_tmax = linear_model.Lasso(alpha = 0.25);
 reg_tmax.fit (features_tmax, tmax);
 
-#reg_tmin = linear_model.Lasso(alpha = 0.2);
-#reg_tmin = GradientBoostingRegressor(n_estimators=5000, learning_rate=0.0018)
+#reg_tmin = linear_model.Lasso(alpha = 0.25);
 reg_tmin.fit (features_tmin, tmin);
 
 for i in range(len(days_missing)) :

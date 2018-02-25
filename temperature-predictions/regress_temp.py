@@ -72,10 +72,8 @@ for i in range(npoints) :
 # min (max) temperature as features to figure out the target max (min) temp.
 ################################################################################
 
-from sklearn.ensemble import RandomForestRegressor
-from sklearn.tree import DecisionTreeRegressor
+# Find that gradient boosting eeks out a few more % accuracy.
 from sklearn.ensemble import GradientBoostingRegressor
-
 reg_tmin = GradientBoostingRegressor(loss='ls', learning_rate=0.05, n_estimators=120, max_depth=3)
 reg_tmax = GradientBoostingRegressor(loss='ls', learning_rate=0.075, n_estimators=100, max_depth=4)
 

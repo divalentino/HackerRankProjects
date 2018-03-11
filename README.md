@@ -1,3 +1,3 @@
 # HackerRankProjects
 
-Keeping a repository of completed HackerRank challenges for future reference. In general, these are meant to allow practice in Python, with a specific emphasis on using scikit and pandas for statistical analysis and machine learning.
+Solutions to machine learning challenges from HackerRank, e.g. using linear regression to predict housing prices, classifying question topics based on metadata and text samples, and using a multivariate regressor to estimate missing temperature data.
